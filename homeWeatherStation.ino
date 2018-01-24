@@ -11,8 +11,8 @@
 Adafruit_SSD1306 display(OLED_RESET);
 
 // Pin definitions
-const int pinTempHum = 2; // Temperature and humidity sensor
-const int pinChipSelect = 10;
+const int pinTempHum = 2;  // Temperature and humidity sensor
+const int pinChipSelect = 10;  // Chip select for SPI connection to SD card
 
 // Global variables
 DHT dht(pinTempHum, DHTTYPE);
