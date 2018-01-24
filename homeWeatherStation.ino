@@ -81,14 +81,15 @@ void displaySensorValues(float temp, float hum) {
 }
 
 void writeToSd(float temp, float hum) {
-    String dataString = String(temp) + "," + String(hum);
+    char dataString[9];
+    snprintf(dataString, sizeof(dataString), "%02f,%02f");
     File dataFile = SD.open("humTempLog.txt", FILE_WRITE);
     if (dataFile) {
         dataFile.println(dataString);
         dataFile.close();
-        Serial.print("Data string: "); Serial.println(dataString);
+        Serial.print(F("Data string: ")); Serial.println(dataString);
     } else {
-        Serial.println("Error opening humTempLog.txt");
+        Serial.println(("Error opening humTempLog.txt"));
     }
 }
 
