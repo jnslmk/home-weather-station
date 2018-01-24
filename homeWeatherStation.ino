@@ -32,13 +32,13 @@ void setup() {
 
     // Initialize SD card
     pinMode(pinChipSelect, OUTPUT);
-    Serial.print("Initializing SD card...");
+    Serial.print(F("Initializing SD card..."));
     // See if the card is present and can be initialized
     if (!SD.begin(pinChipSelect)) {
-        Serial.println("Card failed, or not present");
+        Serial.println(F("Card failed, or not present"));
         sdOk = false;
     } else {
-        Serial.println("Card initialized.");
+        Serial.println(F("Card initialized."));
         sdOk = true;
     }
 }
@@ -64,8 +64,9 @@ void loop() {
 }
 
 void printSensorValues(float temp, float hum) {
-    Serial.print("Temperature: "); Serial.print(temp); Serial.println("°C");
-    Serial.print("Humidity: "); Serial.print(hum); Serial.println("%");
+    Serial.print(F("Temperature: ")); Serial.print(temp);
+    Serial.println(F("°C"));
+    Serial.print(F("Humidity: ")); Serial.print(hum); Serial.println(F("%"));
 }
 
 void displaySensorValues(float temp, float hum) {
@@ -73,9 +74,9 @@ void displaySensorValues(float temp, float hum) {
     display.setTextSize(1.5);
     display.setTextColor(WHITE);
     display.setCursor(0, 0);
-    display.print("Temperature: "); display.print(temp); 
-    display.print((char)247); display.println("C");
-    display.print("Humidity: "); display.print(hum); display.println("%");
+    display.print(F("Temperature: ")); display.print(temp); 
+    display.print((char)247); display.println(F("C"));
+    display.print(F("Humidity: ")); display.print(hum); display.println(F("%"));
     display.display();
 }
 
