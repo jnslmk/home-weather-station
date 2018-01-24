@@ -13,6 +13,8 @@ Adafruit_SSD1306 display(OLED_RESET);
 // Pin definitions
 const int pinTempHum = 2;  // Temperature and humidity sensor
 const int pinChipSelect = 10;  // Chip select for SPI connection to SD card
+const int pinWindow = 5;  // Window NC switch. Open if window is open
+const int pinHeater = 6;  // Heater NC switch. Closed if heater is on
 
 // Global variables
 DHT dht(pinTempHum, DHTTYPE);
@@ -47,12 +49,14 @@ void loop() {
     // Set update frequency
     delay(1000);
 
-    // Read values from sensor
+    // Read values from sensors
     float temp = dht.readTemperature();
     float hum = dht.readHumidity();
+    bool windowOpen = digitalRead(pinWindow);
 
     // Print sensor values
     printSensorValues(temp, hum);
+    Serial.print(F("Window: ")); Serial.println(windowOpen);
 
     // Display sensor values
     displaySensorValues(temp, hum);
