@@ -73,7 +73,8 @@ void displaySensorValues(float temp, float hum) {
   display.setTextSize(1.5);
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
-  display.print("Temperature: "); display.print(temp); display.print((char)247); display.println("C");
+  display.print("Temperature: "); display.print(temp); 
+  display.print((char)247); display.println("C");
   display.print("Humidity: "); display.print(hum); display.println("%");
   display.display();
 }
