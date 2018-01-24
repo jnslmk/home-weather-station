@@ -20,6 +20,17 @@ const int pinHeater = 6;  // Heater NC switch. Closed if heater is on
 DHT dht(pinTempHum, DHTTYPE);
 bool sdOk = false;
 
+// String dispatcher for window and heater
+const char strWindowOpen[] PROGMEM = "open";
+const char strWindowClosed[] PROGMEM = "closed";
+const char* const strWindow[] PROGMEM = {strWindowClosed, strWindowOpen};
+const char strHeaterOn[] PROGMEM = "on";
+const char strHeaterOff[] PROGMEM = "off";
+const char* const strHeater[] PROGMEM = {strHeaterOff, strHeaterOn};
+
+// Buffer to print PROGMEM strings
+char strBuffer[6];
+
 void setup() {
     // Start serial connection
     Serial.begin(9600);
@@ -52,14 +63,14 @@ void loop() {
     // Read values from sensors
     float temp = dht.readTemperature();
     float hum = dht.readHumidity();
-    bool windowOpen = digitalRead(pinWindow);
+    bool windowOpen = !digitalRead(pinWindow);
+    bool heaterOn = !digitalRead(pinHeater);
 
     // Print sensor values
-    printSensorValues(temp, hum);
-    Serial.print(F("Window: ")); Serial.println(windowOpen);
+    printSensorValues(temp, hum, windowOpen, heaterOn);
 
     // Display sensor values
-    displaySensorValues(temp, hum);
+    displaySensorValues(temp, hum, windowOpen, heaterOn);
 
     // Write values to SD card
     if (sdOk) {
@@ -67,20 +78,27 @@ void loop() {
     }
 }
 
-void printSensorValues(float temp, float hum) {
+void printSensorValues(float temp, float hum, bool windowOpen, bool heaterOn) {
     Serial.print(F("Temperature: ")); Serial.print(temp);
     Serial.println(F("°C"));
     Serial.print(F("Humidity: ")); Serial.print(hum); Serial.println(F("%"));
+    strcpy_P(strBuffer, (char*)pgm_read_word(&(strWindow[windowOpen])));
+    Serial.print(F("Window: ")); Serial.println(strBuffer);
+    strcpy_P(strBuffer, (char*)pgm_read_word(&(strHeater[heaterOn])));
+    Serial.print(F("Heater: ")); Serial.println(strBuffer);
 }
 
-void displaySensorValues(float temp, float hum) {
+void displaySensorValues(float temp, float hum, bool windowOpen, 
+                         bool heaterOn) {
     display.clearDisplay();
-    display.setTextSize(1.5);
-    display.setTextColor(WHITE);
     display.setCursor(0, 0);
     display.print(F("Temperature: ")); display.print(temp); 
     display.print((char)247); display.println(F("C"));
     display.print(F("Humidity: ")); display.print(hum); display.println(F("%"));
+    strcpy_P(strBuffer, (char*)pgm_read_word(&(strWindow[windowOpen])));
+    display.print(F("Window: ")); display.println(strBuffer);
+    strcpy_P(strBuffer, (char*)pgm_read_word(&(strHeater[heaterOn])));
+    display.print(F("Heater: ")); display.println(strBuffer);
     display.display();
 }
 
