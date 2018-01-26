@@ -15,6 +15,7 @@ const int pinTempHum = 2;  // Temperature and humidity sensor
 const int pinChipSelect = 10;  // Chip select for SPI connection to SD card
 const int pinWindow = 5;  // Window NC switch. Open if window is open
 const int pinHeater = 6;  // Heater NC switch. Closed if heater is on
+const int pinBuzzer = 4;  // Pin for transistor circuit driving buzzer
 
 // Global variables
 DHT dht(pinTempHum, DHTTYPE);
@@ -42,6 +43,9 @@ void setup() {
     display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
     display.setTextSize(1.5);
     display.setTextColor(WHITE);
+    
+    // Setup buzzer pin as output pin
+    pinMode(pinBuzzer, OUTPUT);
 
     // Initialize SD card
     pinMode(pinChipSelect, OUTPUT);
@@ -65,6 +69,13 @@ void loop() {
     float hum = dht.readHumidity();
     bool windowOpen = !digitalRead(pinWindow);
     bool heaterOn = !digitalRead(pinHeater);
+    
+    // Check buzzer circuit by buzzing if window is closed
+    if (!windowOpen) {
+        digitalWrite(pinBuzzer, HIGH);
+    } else {
+        digitalWrite(pinBuzzer, LOW);
+    }
 
     // Print sensor values
     printSensorValues(temp, hum, windowOpen, heaterOn);
