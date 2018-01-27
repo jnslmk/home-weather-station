@@ -46,6 +46,7 @@ void setup() {
     
     // Setup buzzer pin as output pin
     pinMode(pinBuzzer, OUTPUT);
+    digitalWrite(pinBuzzer, LOW);
 
     // Initialize SD card
     pinMode(pinChipSelect, OUTPUT);
