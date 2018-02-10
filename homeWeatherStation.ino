@@ -1,14 +1,14 @@
 #include "DHT.h"
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
+//#include <Adafruit_GFX.h>
+//#include <Adafruit_SSD1306.h>
 #include <SPI.h>
 #include <SD.h>
 
 // Define type of temperature and humidity sensor
 #define DHTTYPE DHT22
 
-#define OLED_RESET 4
-Adafruit_SSD1306 display(OLED_RESET);
+//#define OLED_RESET 4
+//Adafruit_SSD1306 display(OLED_RESET);
 
 // Pin definitions
 const int pinTempHum = 2;  // Temperature and humidity sensor
@@ -40,9 +40,9 @@ void setup() {
     dht.begin();
 
     // Start and setup display
-    display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
-    display.setTextSize(1.5);
-    display.setTextColor(WHITE);
+ //   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+ //   display.setTextSize(1.5);
+ //   display.setTextColor(WHITE);
     
     // Setup buzzer pin as output pin
     pinMode(pinBuzzer, OUTPUT);
@@ -82,11 +82,11 @@ void loop() {
     printSensorValues(temp, hum, windowOpen, heaterOn);
 
     // Display sensor values
-    displaySensorValues(temp, hum, windowOpen, heaterOn);
+ //   displaySensorValues(temp, hum, windowOpen, heaterOn);
 
     // Write values to SD card
     if (sdOk) {
-//        writeToSd(temp, hum);
+        writeToSd(temp, hum, windowOpen, heaterOn);
     }
 }
 
@@ -100,30 +100,30 @@ void printSensorValues(float temp, float hum, bool windowOpen, bool heaterOn) {
     Serial.print(F("Heater: ")); Serial.println(strBuffer);
 }
 
-void displaySensorValues(float temp, float hum, bool windowOpen, 
-                         bool heaterOn) {
-    display.clearDisplay();
-    display.setCursor(0, 0);
-    display.print(F("Temperature: ")); display.print(temp); 
-    display.print((char)247); display.println(F("C"));
-    display.print(F("Humidity: ")); display.print(hum); display.println(F("%"));
-    strcpy_P(strBuffer, (char*)pgm_read_word(&(strWindow[windowOpen])));
-    display.print(F("Window: ")); display.println(strBuffer);
-    strcpy_P(strBuffer, (char*)pgm_read_word(&(strHeater[heaterOn])));
-    display.print(F("Heater: ")); display.println(strBuffer);
-    display.display();
-}
+//void displaySensorValues(float temp, float hum, bool windowOpen, 
+//                         bool heaterOn) {
+//    display.clearDisplay();
+//    display.setCursor(0, 0);
+//    display.print(F("Temperature: ")); display.print(temp); 
+//    display.print((char)247); display.println(F("C"));
+//    display.print(F("Humidity: ")); display.print(hum); display.println(F("%"));
+//    strcpy_P(strBuffer, (char*)pgm_read_word(&(strWindow[windowOpen])));
+//    display.print(F("Window: ")); display.println(strBuffer);
+//    strcpy_P(strBuffer, (char*)pgm_read_word(&(strHeater[heaterOn])));
+//    display.print(F("Heater: ")); display.println(strBuffer);
+//    display.display();
+//}
 
-void writeToSd(float temp, float hum) {
+void writeToSd(float temp, float hum, bool windowOpen, bool heaterOn) {
     char dataString[9];
-    snprintf(dataString, sizeof(dataString), "%02f,%02f");
-    File dataFile = SD.open("humTempLog.txt", FILE_WRITE);
+    snprintf(dataString, sizeof(dataString), "%d,%d", windowOpen, heaterOn);
+    File dataFile = SD.open("log.txt", FILE_WRITE);
     if (dataFile) {
-        dataFile.println(dataString);
+//        dataFile.println(dataString);
         dataFile.close();
         Serial.print(F("Data string: ")); Serial.println(dataString);
     } else {
-        Serial.println(("Error opening humTempLog.txt"));
+        Serial.println(("Error opening log.txt"));
     }
 }
 
